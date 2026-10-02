@@ -7,11 +7,6 @@ class AlarmClock implements Ringable {
     private String time;
 
     public AlarmClock(String time) {
-
-        if (time == null || time.trim().isEmpty()) {
-            throw new IllegalArgumentException("Time cannot be blank");
-        }
-
         this.time = time;
     }
 
@@ -26,11 +21,6 @@ class Doorbell implements Ringable {
     private String location;
 
     public Doorbell(String location) {
-
-        if (location == null || location.trim().isEmpty()) {
-            throw new IllegalArgumentException("Location cannot be blank");
-        }
-
         this.location = location;
     }
 
@@ -40,7 +30,7 @@ class Doorbell implements Ringable {
     }
 }
 
-public class Ringable {
+public class Main {
 
     static void ringAll(Ringable[] devices) {
 
@@ -51,11 +41,8 @@ public class Ringable {
 
     public static void main(String[] args) {
 
-        AlarmClock a =
-                new AlarmClock("7:00 AM");
-
-        Doorbell d =
-                new Doorbell("Front Door");
+        AlarmClock a = new AlarmClock("7:00 AM");
+        Doorbell d = new Doorbell("Front Door");
 
         System.out.println(a.ring());
         System.out.println(d.ring());
