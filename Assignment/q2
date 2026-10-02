@@ -1,24 +1,14 @@
 abstract class ArtPiece {
 
     private static int counter = 1000;
-
     private final String pieceId;
-
     protected String title;
 
     public ArtPiece(String title) {
 
-        if (title == null || title.trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Title cannot be blank"
-            );
-        }
-
-        counter++;
-
-        pieceId = "ART-" + counter;
-
         this.title = title;
+        counter++;
+        pieceId = "ART-" + counter;
     }
 
     public abstract String describe();
@@ -36,8 +26,7 @@ class Painting extends ArtPiece {
 
     @Override
     public String describe() {
-        return "Painting: " + title +
-               ", framed on canvas";
+        return "Painting: " + title + ", framed on canvas";
     }
 }
 
@@ -49,20 +38,16 @@ class Sculpture extends ArtPiece {
 
     @Override
     public String describe() {
-        return "Sculpture: " + title +
-               ", carved from stone";
+        return "Sculpture: " + title + ", carved from stone";
     }
 }
 
-public class ArtPieceTest {
+public class Main {
 
     public static void main(String[] args) {
 
-        Painting p =
-                new Painting("Sunset Fields");
-
-        Sculpture s =
-                new Sculpture("The Thinker II");
+        Painting p = new Painting("Sunset Fields");
+        Sculpture s = new Sculpture("The Thinker II");
 
         System.out.println(p.describe());
         System.out.println(s.describe());
