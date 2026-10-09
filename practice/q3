@@ -1,0 +1,34 @@
+import java.util.*;
+public class Q3_MostPopularCanteenOrder {
+    static String[] mostPopular(String[] orders) {
+        HashMap<String, Integer> map = new HashMap<>();
+
+        for (String item : orders) {
+            map.put(item, map.getOrDefault(item, 0) + 1);
+        }
+
+        String popular = orders[0];
+        int maxCount = map.get(popular);
+
+        for (String item : orders) {
+            if (map.get(item) > maxCount) {
+                popular = item;
+                maxCount = map.get(item);
+            }
+        }
+
+        return new String[]{popular, String.valueOf(maxCount)};
+    }
+
+    public static void main(String[] args) {
+        String[] orders = {
+            "dosa", "idli", "vada", "dosa",
+            "idli", "dosa", "tea"
+        };
+
+        String[] result = mostPopular(orders);
+
+        System.out.println("(" + result[0] + ", " + result[1] + ")");
+    }
+}
+```
