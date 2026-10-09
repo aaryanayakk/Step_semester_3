@@ -1,0 +1,156 @@
+```java
+import java.util.*;
+
+class Student {
+    String name;
+
+    Student(String name) {
+        this.name = name;
+    }
+}
+
+abstract class Question {
+    String questionText;
+    int marks;
+
+    Question(String questionText, int marks) {
+        this.questionText = questionText;
+        this.marks = marks;
+    }
+
+    abstract boolean evaluate(String answer);
+}
+
+class MultipleChoiceQuestion extends Question {
+    String correctAnswer;
+
+    MultipleChoiceQuestion(String questionText, int marks, String correctAnswer) {
+        super(questionText, marks);
+        this.correctAnswer = correctAnswer;
+    }
+
+    boolean evaluate(String answer) {
+        return correctAnswer.equalsIgnoreCase(answer);
+    }
+}
+
+class TrueFalseQuestion extends Question {
+    String correctAnswer;
+
+    TrueFalseQuestion(String questionText, int marks, String correctAnswer) {
+        super(questionText, marks);
+        this.correctAnswer = correctAnswer;
+    }
+
+    boolean evaluate(String answer) {
+        return correctAnswer.equalsIgnoreCase(answer);
+    }
+}
+
+class ShortAnswerQuestion extends Question {
+    String correctAnswer;
+
+    ShortAnswerQuestion(String questionText, int marks, String correctAnswer) {
+        super(questionText, marks);
+        this.correctAnswer = correctAnswer;
+    }
+
+    boolean evaluate(String answer) {
+        return correctAnswer.equalsIgnoreCase(answer.trim());
+    }
+}
+
+class Examination {
+    String title;
+    List<Question> questions = new ArrayList<>();
+
+    Examination(String title) {
+        this.title = title;
+    }
+
+    void addQuestion(Question question) {
+        questions.add(question);
+    }
+}
+
+class Attempt {
+    private Student student;
+    private Examination examination;
+    private Map<Integer, String> answers = new HashMap<>();
+    private boolean submitted;
+
+    Attempt(Student student, Examination examination) {
+        this.student = student;
+        this.examination = examination;
+        this.submitted = false;
+
+        System.out.println(examination.title + " started by " + student.name + ".");
+    }
+
+    void recordAnswer(int questionNumber, String answer) {
+        if (submitted) {
+            System.out.println("Cannot change answers for a submitted examination.");
+            return;
+        }
+
+        if (questionNumber < 1 ||
+                questionNumber > examination.questions.size()) {
+            System.out.println("Invalid question number.");
+            return;
+        }
+
+        answers.put(questionNumber, answer);
+        System.out.println("Answer recorded for Question " + questionNumber + ".");
+    }
+
+    void submit() {
+        if (submitted) {
+            System.out.println("Examination has already been submitted.");
+            return;
+        }
+
+        submitted = true;
+        System.out.println(examination.title + " submitted by " + student.name + ".");
+
+        int totalScore = 0;
+        int totalMarks = 0;
+
+        for (int i = 0; i < examination.questions.size(); i++) {
+            Question question = examination.questions.get(i);
+            totalMarks += question.marks;
+
+            String answer = answers.get(i + 1);
+
+            if (answer != null && question.evaluate(answer)) {
+                totalScore += question.marks;
+                System.out.println("Question " + (i + 1)
+                        + ": Correct (" + question.marks + " points)");
+            } else {
+                System.out.println("Question " + (i + 1) + ": Incorrect (0 points)");
+            }
+        }
+
+        System.out.println("Total score: " + totalScore + "/" + totalMarks);
+    }
+}
+
+public class Q3_OnlineExaminationSystem {
+    public static void main(String[] args) {
+        Student student = new Student("Student 1");
+
+        Examination exam = new Examination("Exam A");
+        exam.addQuestion(new MultipleChoiceQuestion(
+                "Question 1", 5, "C"));
+        exam.addQuestion(new TrueFalseQuestion(
+                "Question 2", 5, "False"));
+
+        Attempt attempt = new Attempt(student, exam);
+
+        attempt.recordAnswer(1, "C");
+        attempt.recordAnswer(2, "True");
+
+        attempt.submit();
+        attempt.recordAnswer(1, "A");
+    }
+}
+```
