@@ -1,4 +1,3 @@
-```java
 public class Q4_HotWeatherAlertWindows {
     static int countAlerts(int[] readings, int k, int threshold) {
         int sum = 0;
