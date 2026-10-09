@@ -1,4 +1,3 @@
-```java
 public class Q5_TicketPriceSlotFinder {
     static int searchInsert(int[] prices, int target) {
         int low = 0;
