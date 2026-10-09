@@ -1,4 +1,3 @@
-```java
 abstract class MembershipPlan {
     abstract int getDuration();
     abstract double getDiscount();
