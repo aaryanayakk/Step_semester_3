@@ -1,4 +1,3 @@
-```java
 abstract class Vehicle {
     String vehicleId;
     boolean available;
