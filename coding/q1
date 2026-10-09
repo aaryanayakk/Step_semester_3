@@ -1,4 +1,3 @@
-```java
 abstract class WashType {
     abstract int getDuration();
     abstract double getCharge();
