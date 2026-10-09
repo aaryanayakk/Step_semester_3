@@ -1,0 +1,111 @@
+```java
+import java.util.*;
+
+interface NotificationChannel {
+    void send(String studentName, String noticeTitle);
+}
+
+class EmailChannel implements NotificationChannel {
+    public void send(String studentName, String noticeTitle) {
+        System.out.println("[Email → " + studentName + "] " + noticeTitle);
+    }
+}
+
+class SmsChannel implements NotificationChannel {
+    public void send(String studentName, String noticeTitle) {
+        System.out.println("[SMS → " + studentName + "] " + noticeTitle);
+    }
+}
+
+class AppChannel implements NotificationChannel {
+    public void send(String studentName, String noticeTitle) {
+        System.out.println("[App → " + studentName + "] " + noticeTitle);
+    }
+}
+
+class Student {
+    String name;
+    String department;
+    List<NotificationChannel> channels;
+
+    Student(String name, String department,
+            List<NotificationChannel> channels) {
+        this.name = name;
+        this.department = department;
+        this.channels = channels;
+    }
+}
+
+class Notice {
+    String title;
+    Set<String> targetDepartments;
+
+    Notice(String title, Set<String> targetDepartments) {
+        this.title = title;
+        this.targetDepartments = new HashSet<>(targetDepartments);
+    }
+
+    boolean isValid() {
+        return title != null && !title.trim().isEmpty()
+                && !targetDepartments.isEmpty();
+    }
+}
+
+class NoticeBoard {
+    List<Student> students = new ArrayList<>();
+
+    void addStudent(Student student) {
+        students.add(student);
+    }
+
+    void postNotice(Notice notice) {
+        if (!notice.isValid()) {
+            System.out.println(
+                    "Cannot post notice: At least one target department is required.");
+            return;
+        }
+
+        System.out.println("Notice '" + notice.title
+                + "' posted to " + String.join(", ",
+                notice.targetDepartments) + ".");
+
+        for (Student student : students) {
+            if (notice.targetDepartments.contains(student.department)) {
+                for (NotificationChannel channel : student.channels) {
+                    channel.send(student.name, notice.title);
+                }
+            }
+        }
+    }
+}
+
+public class Q5_CampusNoticeBroadcaster {
+    public static void main(String[] args) {
+        NoticeBoard board = new NoticeBoard();
+
+        Student asha = new Student("Asha", "CSE",
+                Arrays.asList(new EmailChannel(), new AppChannel()));
+
+        Student ravi = new Student("Ravi", "ECE",
+                Arrays.asList(new SmsChannel()));
+
+        board.addStudent(asha);
+        board.addStudent(ravi);
+
+        board.postNotice(new Notice(
+                "Lab Closed Tomorrow",
+                new HashSet<>(Arrays.asList("CSE"))
+        ));
+
+        board.postNotice(new Notice(
+                "Fee Deadline Extended",
+                new LinkedHashSet<>(Arrays.asList("CSE", "ECE"))
+        ));
+
+        board.postNotice(new Notice(
+                "Sports Day",
+                new HashSet<>()
+        ));
+    }
+}
+```
