@@ -1,0 +1,138 @@
+```java
+import java.time.LocalDate;
+
+abstract class Employee {
+    String name;
+
+    Employee(String name) {
+        this.name = name;
+    }
+
+    abstract boolean canTakeLeave(int days);
+}
+
+class FullTimeEmployee extends Employee {
+    FullTimeEmployee(String name) {
+        super(name);
+    }
+
+    boolean canTakeLeave(int days) {
+        return days > 0 && days <= 30;
+    }
+}
+
+class PartTimeEmployee extends Employee {
+    PartTimeEmployee(String name) {
+        super(name);
+    }
+
+    boolean canTakeLeave(int days) {
+        return days > 0 && days <= 15;
+    }
+}
+
+class Contractor extends Employee {
+    Contractor(String name) {
+        super(name);
+    }
+
+    boolean canTakeLeave(int days) {
+        return days > 0 && days <= 5;
+    }
+}
+
+class Manager {
+    String name;
+
+    Manager(String name) {
+        this.name = name;
+    }
+
+    void review(LeaveRequest request, String decision) {
+        request.updateStatus(decision, name);
+    }
+}
+
+class LeaveRequest {
+    private Employee employee;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String status;
+
+    LeaveRequest(Employee employee, LocalDate startDate, LocalDate endDate) {
+        this.employee = employee;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = "Pending";
+    }
+
+    void submit() {
+        if (startDate.isAfter(endDate)) {
+            System.out.println("Invalid leave dates.");
+            return;
+        }
+
+        long days = endDate.toEpochDay() - startDate.toEpochDay() + 1;
+
+        if (!employee.canTakeLeave((int) days)) {
+            System.out.println("Leave request exceeds policy for "
+                    + employee.name + ".");
+            return;
+        }
+
+        System.out.println("Leave request submitted for " + employee.name
+                + " (" + startDate + " to " + endDate + ").");
+        System.out.println("Status: " + status);
+    }
+
+    void updateStatus(String newStatus, String managerName) {
+        if (!status.equals("Pending")) {
+            System.out.println("Cannot change leave request status from "
+                    + status + " to " + newStatus + ".");
+            return;
+        }
+
+        if (!newStatus.equals("Approved") && !newStatus.equals("Rejected")) {
+            System.out.println("Invalid status.");
+            return;
+        }
+
+        status = newStatus;
+
+        System.out.println(employee.name + "'s leave request ("
+                + startDate + " to " + endDate + ") "
+                + status.toLowerCase() + " by " + managerName + ".");
+        System.out.println("Status: " + status);
+    }
+}
+
+public class Q2_EmployeeLeaveRequestWorkflow {
+    public static void main(String[] args) {
+        Employee john = new FullTimeEmployee("John");
+        Employee jane = new PartTimeEmployee("Jane");
+
+        Manager alice = new Manager("Alice");
+        Manager bob = new Manager("Bob");
+
+        LeaveRequest r1 = new LeaveRequest(
+                john,
+                LocalDate.of(2026, 1, 1),
+                LocalDate.of(2026, 1, 5)
+        );
+
+        LeaveRequest r2 = new LeaveRequest(
+                jane,
+                LocalDate.of(2026, 2, 10),
+                LocalDate.of(2026, 2, 11)
+        );
+
+        r1.submit();
+        alice.review(r1, "Approved");
+
+        r2.submit();
+        bob.review(r2, "Rejected");
+
+        r1.updateStatus("Pending", "Alice");
+    }
+}
+```
